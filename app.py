@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html', title="AturMesin - Parameter")
+    return render_template('index.html', title="OptiPro - Parameter")
 
 @app.route('/process', methods=['POST'])
 def process():
@@ -44,7 +44,7 @@ def process():
         result_rr = scheduler.calculate_round_robin(materials, max_time)
         
     return render_template('result.html', 
-                           title="AturMesin - Hasil",
+                           title="OptiPro - Hasil",
                            materials=materials,
                            max_time=max_time,
                            total_time_needed=total_time_needed,
