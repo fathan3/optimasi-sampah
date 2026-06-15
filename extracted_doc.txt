@@ -1,0 +1,354 @@
+LAPORAN STUDI KASUS
+Optimasi Penjadwalan Mesin Menggunakan Metode Dynamic Programming dan Round-Robin
+1. Latar Belakang
+1.1 Tujuan Pembuatan Aplikasi
+Aplikasi Optimasi Penjadwalan Mesin dibuat untuk membantu perusahaan dalam mengelola proses produksi ketika waktu operasional mesin terbatas. Tujuan utama aplikasi ini adalah menentukan strategi produksi yang paling efektif agar waktu yang tersedia dapat dimanfaatkan secara optimal. Selain itu, aplikasi ini bertujuan membantu pengguna membandingkan metode Dynamic Programming dan Round-Robin sehingga dapat memilih metode yang paling sesuai dengan kebutuhan perusahaan, baik untuk memaksimalkan keuntungan maupun menjaga pemerataan proses produksi.
+
+1.2 Alur Kerja Aplikasi Saat Dijalankan
+1. Pengguna memasukkan data material yang terdiri dari nama material, jumlah pesanan, waktu proses per kilogram, dan nilai jual per kilogram.
+2. Sistem menghitung total waktu produksi dan total nilai jual berdasarkan data yang dimasukkan.
+3. Sistem membandingkan total waktu yang dibutuhkan dengan batas waktu operasional mesin.
+4. Jika total waktu masih berada dalam batas yang tersedia, data produksi langsung diterima.
+5. Jika total waktu melebihi batas operasional, sistem menjalankan proses optimasi menggunakan metode Dynamic Programming dan Round-Robin.
+6. Sistem menghitung hasil optimasi dari kedua metode.
+7. Sistem menampilkan hasil perbandingan berupa total produksi, total waktu yang digunakan, dan total nilai jual.
+8. Pengguna dapat menentukan metode yang paling sesuai berdasarkan hasil yang ditampilkan.
+
+1.3 Processing Data dan Output Aplikasi
+Input Data:
+- Nama material
+- Jumlah pesanan (kg)
+- Waktu proses per kg
+- Nilai jual per kg
+- Batas waktu operasional mesin
+
+Processing Data:
+- Menghitung total waktu produksi setiap material.
+- Menghitung total nilai jual setiap material.
+- Memeriksa apakah total waktu melebihi batas operasional.
+- Menjalankan algoritma Dynamic Programming untuk mencari kombinasi produksi dengan nilai jual maksimal.
+- Menjalankan algoritma Round-Robin untuk membagi proses produksi secara bergiliran.
+- Membandingkan hasil kedua metode.
+
+Output Aplikasi:
+- Jumlah material yang berhasil diproses.
+- Total waktu produksi yang digunakan.
+- Total nilai jual yang diperoleh.
+- Hasil optimasi Dynamic Programming.
+- Hasil simulasi Round-Robin.
+- Tabel perbandingan kedua metode.
+- Kesimpulan metode yang paling sesuai digunakan.
+Dalam proses produksi, mesin memiliki waktu operasional yang terbatas. Pada studi kasus ini, terdapat pesanan customer berupa tiga jenis material, yaitu besi, plastik, dan kaleng. Setiap material memiliki jumlah pesanan dan waktu proses yang berbeda.
+Masalah utama yang muncul adalah total waktu yang dibutuhkan untuk menyelesaikan seluruh pesanan melebihi batas waktu mesin yang tersedia. Oleh karena itu, diperlukan metode penjadwalan agar proses produksi dapat berjalan lebih optimal.
+Metode yang digunakan dalam laporan ini adalah Dynamic Programming dan Round-Robin. Dynamic Programming digunakan untuk mencari kombinasi produksi terbaik agar menghasilkan nilai jual maksimal, sedangkan Round-Robin digunakan untuk membagi proses produksi secara bergiliran agar setiap material mendapatkan porsi pengerjaan yang lebih adil.
+2. Data Pesanan dan Parameter
+Batas waktu operasional mesin adalah:
+60 menit
+Total waktu jika semua pesanan dikerjakan:
+Karena total kebutuhan waktu adalah 200 menit, sedangkan waktu mesin hanya 60 menit, maka semua pesanan tidak dapat diselesaikan secara penuh.
+3. Metode Dynamic Programming
+3.1 Pengertian Dynamic Programming
+Dynamic Programming adalah metode optimasi yang digunakan untuk mencari solusi terbaik dari beberapa kemungkinan pilihan. Dalam kasus ini, DP digunakan untuk menentukan kombinasi material yang paling optimal agar total nilai jual produksi menjadi maksimal tanpa melebihi batas waktu 60 menit.
+Masalah ini mirip dengan konsep knapsack problem, yaitu memilih barang dengan batas kapasitas tertentu. Dalam studi kasus ini, kapasitasnya adalah waktu mesin, sedangkan nilai yang dimaksimalkan adalah nilai jual hasil produksi.
+3.2 Alur Metode Dynamic Programming
+Alur pengerjaan metode DP adalah sebagai berikut:
+Menentukan data material, yaitu jumlah pesanan, waktu proses per kg, dan nilai jual per kg. 
+Menentukan batas waktu mesin, yaitu 60 menit. 
+Menghitung setiap kemungkinan jumlah material yang dapat diproses. 
+Membandingkan total nilai jual dari setiap kombinasi. 
+Memilih kombinasi dengan nilai jual terbesar tanpa melewati batas waktu. 
+Menampilkan jumlah material yang diproses, total waktu, total berat, dan total nilai jual. 
+3.3 Rumus Dynamic Programming
+Misalkan:
+dp[w] = nilai jual maksimal yang dapat diperoleh dengan batas waktu w
+Rumus:
+dp[w] = max(dp[w], dp[w - waktu_material] + nilai_jual_material)
+Keterangan:
+w = kapasitas waktu mesin
+waktu_material = waktu proses per 1 kg material
+nilai_jual_material = harga jual per 1 kg material
+dp[w] = hasil nilai jual maksimal pada waktu tertentu
+
+3.4 Perhitungan Dynamic Programming
+Pada metode DP, setiap material dipilih berdasarkan kombinasi yang memberikan nilai jual paling maksimal.
+Hasil kombinasi optimal adalah:
+Jadi, metode Dynamic Programming menghasilkan:
+Total berat selesai = 32 kg
+Total waktu terpakai = 60 menit
+Total nilai jual = Rp250.000
+
+4. Metode Round-Robin
+4.1 Pengertian Round-Robin
+Round-Robin adalah metode penjadwalan yang membagi proses secara bergiliran. Pada metode ini, mesin tidak langsung menyelesaikan satu material sampai habis, tetapi memproses setiap material secara berurutan.
+Urutan prosesnya adalah:
+1 kg Besi → 1 kg Plastik → 1 kg Kaleng → ulangi kembali
+Metode ini lebih mengutamakan pemerataan proses, sehingga semua material mendapatkan kesempatan untuk diproduksi.
+4.2 Alur Metode Round-Robin
+Alur pengerjaan Round-Robin adalah sebagai berikut:
+Menentukan urutan material: besi, plastik, lalu kaleng. 
+Mesin memproses 1 kg besi. 
+Setelah itu mesin memproses 1 kg plastik. 
+Setelah itu mesin memproses 1 kg kaleng. 
+Siklus tersebut diulang sampai waktu 60 menit hampir habis. 
+Jika sisa waktu tidak cukup untuk memproses material berikutnya, proses dihentikan. 
+Hasil akhir dihitung berdasarkan jumlah material yang berhasil diproses. 
+4.3 Perhitungan Round-Robin
+Satu siklus penuh membutuhkan waktu:
+Besi = 1 menit
+Plastik = 2 menit
+Kaleng = 5 menit
+Total satu siklus:
+1 + 2 + 5 = 8 menit
+Dalam waktu 60 menit:
+60 ÷ 8 = 7 putaran penuh, sisa 4 menit
+Hasil 7 putaran penuh:
+Sisa waktu 4 menit digunakan untuk:
+Besi 1 kg = 1 menit
+Plastik 1 kg = 2 menit
+Sisa waktu = 1 menit
+Sisa 1 menit tidak cukup untuk memproses 1 kg kaleng karena kaleng membutuhkan 5 menit/kg.
+Maka hasil akhir Round-Robin adalah:
+Jadi, metode Round-Robin menghasilkan:
+Total berat selesai = 23 kg
+Total waktu terpakai = 59 menit
+Total nilai jual = Rp171.000
+
+5. Perbandingan Dynamic Programming dan Round-Robin
+Selisih berat produksi:
+32 kg - 23 kg = 9 kg
+Selisih nilai jual:
+Rp250.000 - Rp171.000 = Rp79.000
+Artinya, metode Dynamic Programming menghasilkan 9 kg lebih banyak dan Rp79.000 lebih besar dibandingkan metode Round-Robin.
+6. Kesimpulan
+Berdasarkan hasil perhitungan, metode Dynamic Programming lebih unggul dibandingkan metode Round-Robin jika tujuan utama perusahaan adalah memaksimalkan hasil produksi dan nilai jual. Dynamic Programming menghasilkan total produksi sebesar 32 kg dengan nilai jual Rp250.000.
+Sementara itu, metode Round-Robin menghasilkan total produksi sebesar 23 kg dengan nilai jual Rp171.000. Walaupun hasilnya lebih kecil, Round-Robin memiliki keunggulan dari sisi pemerataan karena semua material tetap mendapatkan giliran untuk diproses.
+Dengan demikian, jika perusahaan ingin mengejar keuntungan dan output maksimal, maka metode Dynamic Programming lebih tepat digunakan. Namun, jika perusahaan ingin menjaga keadilan pengerjaan untuk semua jenis material, maka metode Round-Robin lebih sesuai.
+7. Alur Singkat Sistem
+Mulai
+↓
+Input data material:
+- Nama material
+- Jumlah pesanan maksimal
+- Waktu proses per kg
+- Nilai jual per kg
+↓
+Operator memasukkan jumlah kg yang ingin diproses
+↓
+Sistem menghitung otomatis total waktu proses:
+Total Waktu = Jumlah Kg × Waktu Proses per Kg
+↓
+Sistem menghitung otomatis total nilai jual:
+Total Nilai = Jumlah Kg × Nilai Jual per Kg
+↓
+Sistem mengecek batas waktu mesin:
+Apakah total waktu ≤ 60 menit?
+↓
+Jika YA:
+Data produksi diterima dan dapat diproses
+↓
+Jika TIDAK:
+Sistem melakukan optimasi menggunakan metode:
+1. Dynamic Programming
+2. Round-Robin
+↓
+Metode Dynamic Programming:
+- Sistem mencari kombinasi jumlah kg terbaik
+- Total waktu tidak boleh melebihi 60 menit
+- Nilai jual dibuat semaksimal mungkin
+↓
+Metode Round-Robin:
+- Sistem memproses material secara bergiliran
+- Besi → Plastik → Kaleng
+- Setiap jumlah kg yang diproses otomatis dikalikan dengan waktu per kg
+↓
+Sistem menampilkan hasil:
+- Jumlah kg yang berhasil diproses
+- Total waktu proses
+- Total nilai jual
+- Perbandingan metode DP dan Round-Robin
+↓
+Selesai
+
+Jadi alurnya: input data → hitung kebutuhan waktu → optimasi dengan DP dan Round-Robin → bandingkan hasil → ambil kesimpulan metode terbaik.
+
+
+
+
+8. Backend dan Frontend Aplikasi
+
+8.1 Proses Backend
+  Pengguna memasukkan data material.
+Data dikirim ke server.
+Server melakukan validasi data.
+Sistem menghitung total waktu produksi.
+Sistem menghitung total nilai jual.
+Sistem menjalankan algoritma Dynamic Programming.
+Sistem menjalankan algoritma Round-Robin.
+Hasil optimasi disimpan dan dikirim ke frontend.
+
+8.2 Proses Frontend
+Frontend bertugas menampilkan antarmuka aplikasi kepada pengguna.
+Menampilkan form input material.
+Menampilkan tombol proses optimasi.
+Mengirim data ke backend.
+Menerima hasil perhitungan.
+Menampilkan tabel hasil Dynamic Programming.
+Menampilkan tabel hasil Round-Robin.
+Menampilkan grafik atau perbandingan hasil.
+Menampilkan kesimpulan metode terbaik.
+
+9. Contoh Penggunaan Aplikasi
+
+1. Pengguna memasukkan data:
+   - Besi = 10 kg
+   - Plastik = 20 kg
+   - Kaleng = 30 kg
+2. Sistem menghitung total waktu produksi.
+3. Sistem mendeteksi total waktu melebihi 60 menit.
+4. Sistem menjalankan Dynamic Programming dan Round-Robin.
+5. Sistem menampilkan hasil kedua metode.
+6. Pengguna memilih metode yang paling sesuai.
+
+10. Rumus Pengolahan Data
+
+Preprocessing:
+Total Waktu = Jumlah Kg × Waktu Proses per Kg
+
+Total Nilai = Jumlah Kg × Nilai Jual per Kg
+
+Dynamic Programming:
+dp[w] = max(dp[w], dp[w - waktu_material] + nilai_jual_material)
+
+Round-Robin:
+Waktu Siklus = Waktu Besi + Waktu Plastik + Waktu Kaleng
+
+Output:
+Output = Total Produksi + Total Waktu + Total Nilai Jual
+Pembagian tugas
+
+Anggota 1 – Dynamic Programming
+Soal 1
+Mengapa Dynamic Programming digunakan pada aplikasi ini?
+Pembahasan:
+Dynamic Programming digunakan karena mampu mencari kombinasi produksi yang memberikan nilai jual maksimum dengan batasan waktu mesin 60 menit. Algoritma ini mengevaluasi berbagai kemungkinan kombinasi material dan memilih solusi yang paling optimal.
+Soal 2
+Apa yang dimaksud state pada Dynamic Programming?
+Pembahasan:
+State merupakan kondisi yang mewakili kapasitas waktu tertentu. Pada aplikasi ini state dinyatakan sebagai dp[w], yaitu nilai jual maksimum yang dapat diperoleh pada waktu w menit.
+Soal 3
+Mengapa waktu mesin dianggap sebagai kapasitas?
+Pembahasan:
+Karena waktu mesin merupakan sumber daya yang terbatas. Semua proses produksi harus dilakukan tanpa melebihi batas waktu yang tersedia.
+Soal 4
+Apa keuntungan utama Dynamic Programming?
+Pembahasan:
+Keuntungan utamanya adalah menghasilkan solusi optimal sehingga nilai jual produksi menjadi maksimal.
+Soal 5
+Apa kelemahan Dynamic Programming?
+Pembahasan:
+Metode ini tidak memperhatikan pemerataan proses produksi karena fokus utamanya adalah optimasi hasil.
+Anggota 2 – Round Robin
+Soal 1
+Apa tujuan penggunaan Round-Robin?
+Pembahasan:
+Round-Robin digunakan untuk memberikan kesempatan yang sama kepada setiap material agar diproses secara bergiliran.
+Soal 2
+Mengapa Round-Robin dianggap adil?
+Pembahasan:
+Karena setiap material mendapatkan giliran pemrosesan tanpa ada yang diprioritaskan.
+Soal 3
+Berapa waktu satu siklus Round-Robin?
+Pembahasan:
+Satu siklus terdiri dari Besi (1 menit), Plastik (2 menit), dan Kaleng (5 menit), sehingga totalnya 8 menit.
+Soal 4
+Apa kelemahan Round-Robin?
+Pembahasan:
+Total nilai jual yang dihasilkan tidak selalu optimal karena sistem tidak mempertimbangkan keuntungan setiap material.
+Soal 5
+Mengapa hasil Round-Robin lebih kecil dari DP?
+Pembahasan:
+Karena waktu produksi dibagi merata ke semua material sehingga tidak selalu memilih material yang paling menguntungkan.
+Anggota 3 – Backend
+Soal 1
+Apa tugas backend pada aplikasi ini?
+Pembahasan:
+Backend bertugas menerima input, mengolah data, menjalankan algoritma, dan mengirim hasil ke frontend.
+Soal 2
+Apa yang dilakukan backend setelah menerima data?
+Pembahasan:
+Backend melakukan validasi data sebelum menjalankan proses perhitungan.
+Soal 3
+Mengapa validasi data diperlukan?
+Pembahasan:
+Untuk memastikan data yang diproses tidak kosong atau tidak sesuai format.
+Soal 4
+Apa output backend?
+Pembahasan:
+Output backend berupa hasil optimasi, total waktu, total produksi, dan total nilai jual.
+Soal 5
+Mengapa backend penting?
+Pembahasan:
+Karena seluruh logika perhitungan dan algoritma dijalankan pada backend.
+Anggota 4 – Frontend
+Soal 1
+Apa fungsi frontend?
+Pembahasan:
+Frontend berfungsi sebagai antarmuka yang digunakan pengguna untuk berinteraksi dengan sistem.
+Soal 2
+Apa yang diinput pengguna pada frontend?
+Pembahasan:
+Nama material, jumlah pesanan, waktu proses, dan nilai jual.
+Soal 3
+Apa yang ditampilkan frontend setelah proses selesai?
+Pembahasan:
+Frontend menampilkan hasil perhitungan dan perbandingan metode.
+Soal 4
+Mengapa frontend penting?
+Pembahasan:
+Karena memudahkan pengguna memahami hasil yang diberikan sistem.
+Soal 5
+Apa manfaat tampilan perbandingan metode?
+Pembahasan:
+Membantu pengguna menentukan metode terbaik berdasarkan hasil yang diperoleh.
+Anggota 5 – Pengolahan Data
+Soal 1
+Bagaimana menghitung total waktu produksi?
+Pembahasan:
+Total waktu diperoleh dari jumlah kilogram dikalikan waktu proses per kilogram.
+Soal 2
+Bagaimana menghitung total nilai jual?
+Pembahasan:
+Total nilai diperoleh dari jumlah kilogram dikalikan nilai jual per kilogram.
+Soal 3
+Mengapa preprocessing diperlukan?
+Pembahasan:
+Untuk mengubah data mentah menjadi informasi yang siap diolah algoritma.
+Soal 4
+Apa tujuan perhitungan total waktu?
+Pembahasan:
+Untuk mengetahui apakah produksi melebihi batas waktu mesin.
+Soal 5
+Apa tujuan perhitungan nilai jual?
+Pembahasan:
+Untuk mengetahui keuntungan yang diperoleh dari proses produksi.
+Anggota 6 – Analisis dan Strategi Algoritma
+Soal 1
+Kapan Dynamic Programming lebih baik digunakan?
+Pembahasan:
+Ketika perusahaan ingin memaksimalkan keuntungan dan hasil produksi.
+Soal 2
+Kapan Round-Robin lebih baik digunakan?
+Pembahasan:
+Ketika pemerataan proses produksi lebih diutamakan dibanding keuntungan maksimum.
+Soal 3
+Mengapa strategi algoritma diperlukan?
+Pembahasan:
+Karena setiap masalah membutuhkan pendekatan yang berbeda untuk memperoleh solusi terbaik.
+Soal 4
+Apa hasil terbaik pada studi kasus ini?
+Pembahasan:
+Dynamic Programming menghasilkan nilai jual Rp250.000 dan produksi 32 kg.
+Soal 5
+Apa kesimpulan dari perbandingan kedua algoritma?
+Pembahasan:
+Dynamic Programming lebih unggul dalam optimasi keuntungan, sedangkan Round-Robin lebih unggul dalam pemerataan proses produksi.
