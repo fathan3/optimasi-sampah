@@ -9,7 +9,12 @@ def index():
 
 @app.route('/process', methods=['POST'])
 def process():
-    max_time = int(request.form.get('max_time', 60))
+    # Validasi max_time agar tidak error jika diisi huruf atau negatif
+    try:
+        max_time = int(request.form.get('max_time', 60))
+        if max_time < 0: max_time = 60
+    except ValueError:
+        max_time = 60
     
     names = request.form.getlist('name[]')
     times = request.form.getlist('time_per_kg[]')
@@ -18,13 +23,25 @@ def process():
     
     materials = []
     for i in range(len(names)):
-        if names[i].strip():
-            materials.append({
-                'name': names[i],
-                'time_per_kg': int(times[i]),
-                'value_per_kg': int(values[i]),
-                'max_qty': int(qtys[i])
-            })
+        name = names[i].strip()
+        if name:
+            try:
+                # Validasi input untuk mencegah error tipe data (Server melakukan validasi data)
+                t_kg = int(times[i]) if i < len(times) else 0
+                v_kg = int(values[i]) if i < len(values) else 0
+                m_qty = int(qtys[i]) if i < len(qtys) else 0
+                
+                # Pastikan input angkanya masuk akal (tidak negatif/nol untuk jumlah)
+                if t_kg > 0 and v_kg >= 0 and m_qty > 0:
+                    materials.append({
+                        'name': name,
+                        'time_per_kg': t_kg,
+                        'value_per_kg': v_kg,
+                        'max_qty': m_qty
+                    })
+            except ValueError:
+                # Abaikan data jika pengguna mengakalinya dengan huruf
+                continue
             
     total_time_needed = 0
     total_value_expected = 0

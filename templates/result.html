@@ -135,7 +135,13 @@
             </div>
         </div>
         <p class="text-sm text-gray-600 leading-relaxed border-l-2 border-gray-200 pl-3">
-            Algoritma <strong>Dynamic Programming</strong> direkomendasikan secara bisnis karena menghasilkan margin keuntungan tertinggi. Namun, algoritma <strong>Round-Robin</strong> dapat dipilih jika terdapat kewajiban kontraktual untuk melayani seluruh jenis pesanan secara proporsional.
+            {% if resultDP.total_value > resultRR.total_value %}
+                Sistem memilih <strong>Dynamic Programming</strong> sebagai metode terbaik untuk memaksimalkan keuntungan bisnis karena menghasilkan total nilai jual yang lebih tinggi. Namun, <strong>Round-Robin</strong> dapat dipertimbangkan jika perusahaan ingin memastikan semua material mendapat giliran diproses.
+            {% elif resultRR.total_value > resultDP.total_value %}
+                Sistem memilih <strong>Round-Robin</strong> sebagai metode terbaik karena selain membagi proses secara adil ke semua material, metode ini juga menghasilkan total nilai jual yang lebih tinggi pada kasus ini.
+            {% else %}
+                Kedua metode menghasilkan total nilai jual yang sama, namun sistem memilih <strong>Round-Robin</strong> karena memiliki keunggulan tambahan yaitu mendistribusikan waktu secara merata ke seluruh material.
+            {% endif %}
         </p>
     </div>
     {% endif %}
