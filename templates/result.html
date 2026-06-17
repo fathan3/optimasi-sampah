@@ -3,154 +3,141 @@
 {% block content %}
 <div class="space-y-8">
 
-    <div class="bg-white rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05),0_1px_2px_0_rgba(0,0,0,0.03)] border border-gray-200 p-6 flex flex-col md:flex-row md:items-center justify-between">
-        <div>
-            <h2 class="text-sm font-semibold text-gray-900 mb-1">Kapasitas Produksi Penuh</h2>
-            <p class="text-sm text-gray-500">Proyeksi jika seluruh pesanan pelanggan dieksekusi.</p>
+    <!-- Info ringkasan dari pesanan -->
+    <div class="grid md:grid-cols-3 gap-5">
+        <div class="glass rounded-3xl p-6">
+            <p class="text-slate-400 text-sm mb-2">Total Berat Pesanan</p>
+            <h2 class="text-4xl font-bold text-white">{{ total_weight_expected }}</h2>
+            <p class="text-slate-400 mt-1">Kilogram</p>
         </div>
-        
-        <div class="flex gap-6 mt-4 md:mt-0">
-            <div>
-                <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Total Berat</p>
-                <p class="text-xl font-semibold text-gray-900">{{ total_weight_expected }} <span class="text-sm font-normal text-gray-500">kg</span></p>
-            </div>
-            <div>
-                <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Proyeksi Nilai Jual</p>
-                <p class="text-xl font-semibold text-gray-900">Rp {{ "{:,.0f}".format(total_value_expected).replace(',', '.') }}</p>
-            </div>
+        <div class="glass rounded-3xl p-6">
+            <p class="text-slate-400 text-sm mb-2">Total Nilai Jual</p>
+            <h2 class="text-3xl font-bold text-cyan-400">Rp {{ "{:,.0f}".format(total_value_expected).replace(',', '.') }}</h2>
+        </div>
+        <div class="glass rounded-3xl p-6">
+            <p class="text-slate-400 text-sm mb-2">Waktu Produksi</p>
+            <h2 class="text-4xl font-bold text-white">{{ total_time_needed }}</h2>
+            <p class="text-slate-400 mt-1">Menit</p>
         </div>
     </div>
 
-    <div class="rounded-lg p-4 flex items-start {% if total_time_needed > max_time %}bg-amber-50 text-amber-800 border border-amber-200/60{% else %}bg-emerald-50 text-emerald-800 border border-emerald-200/60{% endif %}">
-        <div class="mt-0.5 mr-3">
-            {% if total_time_needed > max_time %}
-                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            {% else %}
-                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            {% endif %}
+    <!-- Kasih peringatan kalau waktu mesin gak cukup -->
+    
+    <div class="glass rounded-3xl p-6">
+        {% if total_time_needed > max_time %}
+        <div class="flex items-center gap-4">
+            <div class="text-4xl">⚠️</div>
+            <div>
+                <h3 class="font-bold text-amber-300 text-lg">Kapasitas Mesin Tidak Mencukupi</h3>
+                <p class="text-slate-300">Kebutuhan waktu {{ total_time_needed }} menit melebihi batas {{ max_time }} menit.</p>
+            </div>
         </div>
-        <div>
-            <p class="text-sm font-medium">
-                Kebutuhan waktu: {{ total_time_needed }} menit <span class="mx-2 text-current opacity-50">/</span> Batas mesin: {{ max_time }} menit
-            </p>
-            {% if total_time_needed > max_time %}
-                <p class="text-xs mt-1 opacity-80">Waktu tidak mencukupi. Sistem menghasilkan dua alternatif optimasi di bawah ini.</p>
-            {% endif %}
+        {% else %}
+        <div class="flex items-center gap-4">
+            <div class="text-4xl">✅</div>
+            <div>
+                <h3 class="font-bold text-green-300 text-lg">Kapasitas Mesin Mencukupi</h3>
+                <p class="text-slate-300">Semua pesanan dapat diproses tanpa optimasi tambahan.</p>
+            </div>
         </div>
+        {% endif %}
     </div>
 
     {% if resultDP and resultRR %}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05),0_1px_2px_0_rgba(0,0,0,0.03)] border border-gray-200 overflow-hidden flex flex-col">
-            <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-                <h3 class="text-base font-semibold text-gray-900">Dynamic Programming</h3>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">Profit Maksimal</span>
+    <!-- Nampilin hasil komparasi algoritma -->
+    <div class="grid md:grid-cols-2 gap-8">
+        
+        <!-- Hasil hitungan Dynamic Programming -->
+        <div class="glass rounded-3xl overflow-hidden">
+            <div class="bg-cyan-500/20 p-5 border-b border-white/10">
+                <h3 class="text-xl font-bold">Dynamic Programming</h3>
+                <p class="text-cyan-300 text-sm mt-1">Profit Maksimal</p>
             </div>
-            
-            <div class="p-6 flex-grow flex flex-col">
-                <div class="flex items-baseline mb-6">
-                    <span class="text-3xl font-bold tracking-tight text-gray-900">Rp {{ "{:,.0f}".format(resultDP.total_value).replace(',', '.') }}</span>
-                    <span class="ml-2 text-sm text-gray-500 font-medium">Nilai Jual</span>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="p-4 rounded-lg bg-gray-50 border border-gray-100">
-                        <p class="text-xs text-gray-500 mb-1">Total Berat</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ resultDP.total_weight }} kg</p>
+            <div class="p-6">
+                <h2 class="text-4xl font-bold text-cyan-400 mb-6">Rp {{ "{:,.0f}".format(resultDP.total_value).replace(',', '.') }}</h2>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white/5 rounded-2xl p-4">
+                        <p class="text-slate-400 text-sm">Total Berat</p>
+                        <h4 class="text-2xl font-bold">{{ resultDP.total_weight }}</h4>
                     </div>
-                    <div class="p-4 rounded-lg bg-gray-50 border border-gray-100">
-                        <p class="text-xs text-gray-500 mb-1">Waktu Terpakai</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ resultDP.total_time }} min</p>
+                    <div class="bg-white/5 rounded-2xl p-4">
+                        <p class="text-slate-400 text-sm">Waktu</p>
+                        <h4 class="text-2xl font-bold">{{ resultDP.total_time }}</h4>
                     </div>
                 </div>
-
-                <div class="mt-auto">
-                    <h4 class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Detail Alokasi Material</h4>
-                    <ul class="space-y-3">
-                        {% for item in resultDP.details %}
-                            <li class="flex justify-between items-center text-sm">
-                                <span class="text-gray-600">{{ item.name }}</span>
-                                <span class="font-medium text-gray-900 bg-gray-50 px-2 py-0.5 rounded border border-gray-100">{{ item.qty }} kg</span>
-                            </li>
-                        {% endfor %}
-                        {% if not resultDP.details %}
-                            <li class="text-gray-400 text-sm italic">Tidak ada produksi.</li>
-                        {% endif %}
-                    </ul>
+                <h4 class="font-semibold mb-3 text-slate-300">Detail Material</h4>
+                <div class="space-y-2">
+                    {% for item in resultDP.details %}
+                    <div class="flex justify-between bg-white/5 rounded-xl px-4 py-3">
+                        <span>{{ item.name }}</span>
+                        <span class="font-semibold">{{ item.qty }} kg</span>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05),0_1px_2px_0_rgba(0,0,0,0.03)] border border-gray-200 overflow-hidden flex flex-col">
-            <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-                <h3 class="text-base font-semibold text-gray-900">Round-Robin</h3>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">Distribusi Merata</span>
+        <!-- Hasil hitungan Round Robin -->
+        <div class="glass rounded-3xl overflow-hidden">
+            <div class="bg-blue-500/20 p-5 border-b border-white/10">
+                <h3 class="text-xl font-bold">Round Robin</h3>
+                <p class="text-blue-300 text-sm mt-1">Distribusi Merata</p>
             </div>
-            
-            <div class="p-6 flex-grow flex flex-col">
-                <div class="flex items-baseline mb-6">
-                    <span class="text-3xl font-bold tracking-tight text-gray-900">Rp {{ "{:,.0f}".format(resultRR.total_value).replace(',', '.') }}</span>
-                    <span class="ml-2 text-sm text-gray-500 font-medium">Nilai Jual</span>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="p-4 rounded-lg bg-gray-50 border border-gray-100">
-                        <p class="text-xs text-gray-500 mb-1">Total Berat</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ resultRR.total_weight }} kg</p>
+            <div class="p-6">
+                <h2 class="text-4xl font-bold text-blue-400 mb-6">Rp {{ "{:,.0f}".format(resultRR.total_value).replace(',', '.') }}</h2>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white/5 rounded-2xl p-4">
+                        <p class="text-slate-400 text-sm">Total Berat</p>
+                        <h4 class="text-2xl font-bold">{{ resultRR.total_weight }}</h4>
                     </div>
-                    <div class="p-4 rounded-lg bg-gray-50 border border-gray-100">
-                        <p class="text-xs text-gray-500 mb-1">Waktu Terpakai</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ resultRR.total_time }} min</p>
+                    <div class="bg-white/5 rounded-2xl p-4">
+                        <p class="text-slate-400 text-sm">Waktu</p>
+                        <h4 class="text-2xl font-bold">{{ resultRR.total_time }}</h4>
                     </div>
                 </div>
-
-                <div class="mt-auto">
-                    <h4 class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Detail Alokasi Material</h4>
-                    <ul class="space-y-3">
-                        {% for item in resultRR.details %}
-                            <li class="flex justify-between items-center text-sm">
-                                <span class="text-gray-600">{{ item.name }}</span>
-                                <span class="font-medium text-gray-900 bg-gray-50 px-2 py-0.5 rounded border border-gray-100">{{ item.qty }} kg</span>
-                            </li>
-                        {% endfor %}
-                        {% if not resultRR.details %}
-                            <li class="text-gray-400 text-sm italic">Tidak ada produksi.</li>
-                        {% endif %}
-                    </ul>
+                <h4 class="font-semibold mb-3 text-slate-300">Detail Material</h4>
+                <div class="space-y-2">
+                    {% for item in resultRR.details %}
+                    <div class="flex justify-between bg-white/5 rounded-xl px-4 py-3">
+                        <span>{{ item.name }}</span>
+                        <span class="font-semibold">{{ item.qty }} kg</span>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] border border-gray-200 p-6">
-        <h3 class="text-sm font-semibold text-gray-900 mb-4">Evaluasi Keputusan</h3>
-        <div class="flex flex-wrap gap-4 mb-4">
-            <div class="text-sm">
-                <span class="text-gray-500 mr-2">Selisih Kapasitas (DP - RR):</span>
-                <span class="font-semibold text-gray-900">{{ (resultDP.total_weight - resultRR.total_weight) | abs }} kg</span>
+    <!-- Kesimpulan mana algoritma yang lebih baik -->
+    <div class="glass rounded-3xl p-8">
+        <h3 class="text-2xl font-bold mb-4">Evaluasi Keputusan</h3>
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <p class="text-slate-400">Selisih Kapasitas</p>
+                <h4 class="text-3xl font-bold">{{ (resultDP.total_weight - resultRR.total_weight) | abs }} kg</h4>
             </div>
-            <div class="text-sm">
-                <span class="text-gray-500 mr-2">Selisih Pendapatan:</span>
-                <span class="font-semibold text-emerald-600">Rp {{ "{:,.0f}".format((resultDP.total_value - resultRR.total_value) | abs).replace(',', '.') }}</span>
+            <div>
+                <p class="text-slate-400">Selisih Pendapatan</p>
+                <h4 class="text-3xl font-bold text-green-400">Rp {{ "{:,.0f}".format((resultDP.total_value - resultRR.total_value) | abs).replace(',', '.') }}</h4>
             </div>
         </div>
-        <p class="text-sm text-gray-600 leading-relaxed border-l-2 border-gray-200 pl-3">
+        <p class="text-slate-300 leading-relaxed">
             {% if resultDP.total_value > resultRR.total_value %}
-                Sistem memilih <strong>Dynamic Programming</strong> sebagai metode terbaik untuk memaksimalkan keuntungan bisnis karena menghasilkan total nilai jual yang lebih tinggi. Namun, <strong>Round-Robin</strong> dapat dipertimbangkan jika perusahaan ingin memastikan semua material mendapat giliran diproses.
+            Dynamic Programming menghasilkan nilai jual yang lebih tinggi sehingga menjadi metode terbaik untuk memaksimalkan keuntungan.
             {% elif resultRR.total_value > resultDP.total_value %}
-                Sistem memilih <strong>Round-Robin</strong> sebagai metode terbaik karena selain membagi proses secara adil ke semua material, metode ini juga menghasilkan total nilai jual yang lebih tinggi pada kasus ini.
+            Round Robin menghasilkan nilai jual lebih tinggi dan distribusi proses yang lebih merata.
             {% else %}
-                Kedua metode menghasilkan total nilai jual yang sama, namun sistem memilih <strong>Round-Robin</strong> karena memiliki keunggulan tambahan yaitu mendistribusikan waktu secara merata ke seluruh material.
+            Kedua metode menghasilkan nilai jual yang sama sehingga Round Robin dapat dipilih karena lebih adil dalam pembagian waktu proses.
             {% endif %}
         </p>
     </div>
     {% endif %}
 
-    <div class="pt-4">
-        <a href="{{ url_for('index') }}" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Kembali ke Konfigurasi
+    <div>
+        <a href="{{ url_for('index') }}" class="inline-block bg-white/10 hover:bg-white/20 px-6 py-3 rounded-2xl transition">
+            ← Kembali ke Konfigurasi
         </a>
     </div>
+
 </div>
 {% endblock %}

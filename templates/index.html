@@ -1,48 +1,53 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="bg-white rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05),0_1px_2px_0_rgba(0,0,0,0.03)] border border-gray-200">
-    <div class="px-6 py-4 border-b border-gray-100">
-        <h2 class="text-sm font-semibold text-gray-900">Konfigurasi Parameter</h2>
+<div class="glass rounded-3xl shadow-2xl overflow-hidden">
+    <!-- Header Aplikasi -->
+    <div class="px-8 py-6 border-b border-white/10">
+        <h2 class="text-2xl font-bold text-white">OptiPro</h2>
+        <p class="text-slate-300 mt-2">
+            Atur kapasitas mesin dan material yang akan diproses untuk mendapatkan hasil produksi paling optimal.
+        </p>
     </div>
 
+    <!-- Form untuk masukin batas waktu dan material -->
     <form action="{{ url_for('process') }}" method="POST">
-        <div class="p-6 border-b border-gray-100">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+        <div class="p-8 border-b border-white/10">
+            <label class="block text-sm font-medium text-slate-300 mb-3">
                 Batas Waktu Mesin Tersedia
             </label>
-            <div class="relative w-full sm:w-64">
-                <input type="number" name="max_time" value="60" class="w-full pl-3 pr-16 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-400 transition-all sm:text-sm" required>
-                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <span class="text-gray-400 sm:text-sm">menit</span>
-                </div>
+            <div class="relative max-w-xs">
+                <input type="number" name="max_time" value="60" class="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400" required>
+                <span class="absolute right-4 top-3 text-slate-300">menit</span>
             </div>
         </div>
 
-        <div class="p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-medium text-gray-700">Detail Material Pesanan</h3>
-                <button type="button" id="addRowBtn" class="text-sm font-medium text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors flex items-center border border-gray-200 bg-white shadow-sm">
-                    <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    Tambah Baris
+        <div class="p-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-semibold text-white">Detail Material</h3>
+                    <p class="text-slate-400 text-sm">Tambahkan material yang akan diproses.</p>
+                </div>
+                <button type="button" id="addRowBtn" class="bg-cyan-500 hover:bg-cyan-400 text-white px-5 py-2 rounded-xl transition shadow-lg">
+                    + Tambah Material
                 </button>
             </div>
-            
-            <div class="border border-gray-200 rounded-lg overflow-x-auto shadow-sm">
-                <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
+
+            <div class="overflow-x-auto rounded-2xl border border-white/10">
+                <table class="w-full">
                     <thead>
-                        <tr class="bg-gray-50 border-b border-gray-200">
-                            <th class="px-4 py-3 font-medium text-gray-500 w-1/4">Nama Material</th>
-                            <th class="px-4 py-3 font-medium text-gray-500 w-1/4">Pesanan (kg)</th>
-                            <th class="px-4 py-3 font-medium text-gray-500 w-1/4">Durasi (m/kg)</th>
-                            <th class="px-4 py-3 font-medium text-gray-500 w-1/4">Nilai Jual (Rp/kg)</th>
-                            <th class="px-4 py-3 font-medium text-gray-500 text-center w-12"></th>
+                        <tr class="bg-white/5">
+                            <th class="p-4 text-left text-slate-300">Material</th>
+                            <th class="p-4 text-left text-slate-300">Pesanan (kg)</th>
+                            <th class="p-4 text-left text-slate-300">Durasi (m/kg)</th>
+                            <th class="p-4 text-left text-slate-300">Nilai Jual</th>
+                            <th></th>
                         </tr>
                     </thead>
-                    <tbody id="materialTableBody" class="divide-y divide-gray-100 bg-white">
-                        <tr class="group hover:bg-gray-50/50 transition-colors">
-                            <td class="p-2">
-                                <select name="name[]" class="w-full px-3 py-2 bg-transparent border border-transparent hover:border-gray-200 focus:border-gray-300 focus:bg-white rounded-md focus:outline-none focus:ring-0 transition-all" required onchange="updateSpecs(this)">
+                    <tbody id="materialTableBody">
+                        <tr class="border-t border-white/10">
+                            <td class="p-3">
+                                <select name="name[]" required onchange="updateSpecs(this)" class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white">
                                     <option value="" disabled selected>Pilih Material</option>
                                     <option value="Besi" data-time="5" data-value="10000">Besi</option>
                                     <option value="Plastik" data-time="2" data-value="5000">Plastik</option>
@@ -51,13 +56,17 @@
                                     <option value="Kaca" data-time="6" data-value="14000">Kaca</option>
                                 </select>
                             </td>
-                            <td class="p-2"><input type="number" name="max_qty[]" placeholder="" class="w-full px-3 py-2 bg-transparent border border-transparent hover:border-gray-200 focus:border-gray-300 focus:bg-white rounded-md focus:outline-none focus:ring-0 transition-all" required></td>
-                            <td class="p-2"><input type="number" name="time_per_kg[]" placeholder="-" class="w-full px-3 py-2 bg-gray-50 border border-transparent rounded-md focus:outline-none text-gray-500 cursor-not-allowed" required readonly></td>
-                            <td class="p-2"><input type="number" name="value_per_kg[]" placeholder="-" class="w-full px-3 py-2 bg-gray-50 border border-transparent rounded-md focus:outline-none text-gray-500 cursor-not-allowed" required readonly></td>
-                            <td class="p-2 text-center">
-                                <button type="button" class="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all p-1.5 rounded-md hover:bg-red-50" onclick="removeRow(this)">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
+                            <td class="p-3">
+                                <input type="number" name="max_qty[]" required class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white">
+                            </td>
+                            <td class="p-3">
+                                <input type="number" name="time_per_kg[]" readonly class="w-full bg-white/5 rounded-xl px-4 py-3 text-cyan-300">
+                            </td>
+                            <td class="p-3">
+                                <input type="number" name="value_per_kg[]" readonly class="w-full bg-white/5 rounded-xl px-4 py-3 text-green-300">
+                            </td>
+                            <td class="p-3 text-center">
+                                <button type="button" onclick="removeRow(this)" class="text-red-400 hover:text-red-300">✕</button>
                             </td>
                         </tr>
                     </tbody>
@@ -65,62 +74,64 @@
             </div>
         </div>
 
-        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-xl flex items-center justify-between">
-            <button type="submit" class="bg-gray-900 hover:bg-black text-white text-sm font-medium py-2 px-5 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors flex items-center">
+        <div class="px-8 py-6 border-t border-white/10">
+            <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 px-8 py-4 rounded-2xl font-semibold shadow-xl transition">
                 Jalankan Optimasi
-                <svg class="w-4 h-4 ml-1.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </button>
         </div>
     </form>
 </div>
 
+<!-- Script buat nambah/hapus baris material -->
 <script>
-    document.getElementById('addRowBtn').addEventListener('click', function() {
-        const tbody = document.getElementById('materialTableBody');
-        const tr = document.createElement('tr');
-        tr.className = 'group hover:bg-gray-50/50 transition-colors';
-        
-        tr.innerHTML = `
-            <td class="p-2">
-                <select name="name[]" class="w-full px-3 py-2 bg-transparent border border-transparent hover:border-gray-200 focus:border-gray-300 focus:bg-white rounded-md focus:outline-none focus:ring-0 transition-all" required onchange="updateSpecs(this)">
-                    <option value="" disabled selected>Pilih Material</option>
-                    <option value="Besi" data-time="5" data-value="10000">Besi</option>
-                    <option value="Plastik" data-time="2" data-value="5000">Plastik</option>
-                    <option value="Kaleng" data-time="3" data-value="7000">Kaleng</option>
-                    <option value="Kertas" data-time="1" data-value="3000">Kertas</option>
-                    <option value="Kaca" data-time="6" data-value="14000">Kaca</option>
-                </select>
-            </td>
-            <td class="p-2"><input type="number" name="max_qty[]" placeholder="" class="w-full px-3 py-2 bg-transparent border border-transparent hover:border-gray-200 focus:border-gray-300 focus:bg-white rounded-md focus:outline-none focus:ring-0 transition-all" required></td>
-            <td class="p-2"><input type="number" name="time_per_kg[]" placeholder="-" class="w-full px-3 py-2 bg-gray-50 border border-transparent rounded-md focus:outline-none text-gray-500 cursor-not-allowed" required readonly></td>
-            <td class="p-2"><input type="number" name="value_per_kg[]" placeholder="-" class="w-full px-3 py-2 bg-gray-50 border border-transparent rounded-md focus:outline-none text-gray-500 cursor-not-allowed" required readonly></td>
-            <td class="p-2 text-center">
-                <button type="button" class="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all p-1.5 rounded-md hover:bg-red-50" onclick="removeRow(this)">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                </button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
+document.getElementById('addRowBtn').addEventListener('click', function() {
+    const tbody = document.getElementById('materialTableBody');
+    const tr = document.createElement('tr');
+    tr.className = 'border-t border-white/10';
+    tr.innerHTML = `
+        <td class="p-3">
+            <select name="name[]" required onchange="updateSpecs(this)" class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white">
+                <option value="" disabled selected>Pilih Material</option>
+                <option value="Besi" data-time="5" data-value="10000">Besi</option>
+                <option value="Plastik" data-time="2" data-value="5000">Plastik</option>
+                <option value="Kaleng" data-time="3" data-value="7000">Kaleng</option>
+                <option value="Kertas" data-time="1" data-value="3000">Kertas</option>
+                <option value="Kaca" data-time="6" data-value="14000">Kaca</option>
+            </select>
+        </td>
+        <td class="p-3">
+            <input type="number" name="max_qty[]" required class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white">
+        </td>
+        <td class="p-3">
+            <input type="number" name="time_per_kg[]" readonly class="w-full bg-white/5 rounded-xl px-4 py-3 text-cyan-300">
+        </td>
+        <td class="p-3">
+            <input type="number" name="value_per_kg[]" readonly class="w-full bg-white/5 rounded-xl px-4 py-3 text-green-300">
+        </td>
+        <td class="p-3 text-center">
+            <button type="button" onclick="removeRow(this)" class="text-red-400">✕</button>
+        </td>
+    `;
+    tbody.appendChild(tr);
+});
 
-    function removeRow(btn) {
-        const tbody = document.getElementById('materialTableBody');
-        if (tbody.children.length > 1) {
-            btn.closest('tr').remove();
-        } else {
-            alert('Harus ada setidaknya 1 material.');
-        }
+function removeRow(btn) {
+    const tbody = document.getElementById('materialTableBody');
+    if (tbody.children.length > 1) {
+        btn.closest('tr').remove();
     }
-    function updateSpecs(selectElem) {
-        const tr = selectElem.closest('tr');
-        const timeInput = tr.querySelector('input[name="time_per_kg[]"]');
-        const valueInput = tr.querySelector('input[name="value_per_kg[]"]');
-        
-        const selectedOption = selectElem.options[selectElem.selectedIndex];
-        if (selectedOption.value) {
-            timeInput.value = selectedOption.dataset.time;
-            valueInput.value = selectedOption.dataset.value;
-        }
+}
+
+function updateSpecs(selectElem) {
+    const tr = selectElem.closest('tr');
+    const timeInput = tr.querySelector('input[name="time_per_kg[]"]');
+    const valueInput = tr.querySelector('input[name="value_per_kg[]"]');
+    const selectedOption = selectElem.options[selectElem.selectedIndex];
+    
+    if (selectedOption.value) {
+        timeInput.value = selectedOption.dataset.time;
+        valueInput.value = selectedOption.dataset.value;
     }
+}
 </script>
-{% endblock %}
+{% endblock %}k %}

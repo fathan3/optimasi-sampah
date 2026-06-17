@@ -9,7 +9,7 @@ def index():
 
 @app.route('/process', methods=['POST'])
 def process():
-    # Validasi max_time agar tidak error jika diisi huruf atau negatif
+    # cek input batas waktu, kalau error default ke 60 menit
     try:
         max_time = int(request.form.get('max_time', 60))
         if max_time < 0: max_time = 60
@@ -21,17 +21,16 @@ def process():
     values = request.form.getlist('value_per_kg[]')
     qtys = request.form.getlist('max_qty[]')
     
+    # kumpulin dan ngecek data material dari form
     materials = []
     for i in range(len(names)):
         name = names[i].strip()
         if name:
             try:
-                # Validasi input untuk mencegah error tipe data (Server melakukan validasi data)
                 t_kg = int(times[i]) if i < len(times) else 0
                 v_kg = int(values[i]) if i < len(values) else 0
                 m_qty = int(qtys[i]) if i < len(qtys) else 0
                 
-                # Pastikan input angkanya masuk akal (tidak negatif/nol untuk jumlah)
                 if t_kg > 0 and v_kg >= 0 and m_qty > 0:
                     materials.append({
                         'name': name,
@@ -40,9 +39,9 @@ def process():
                         'max_qty': m_qty
                     })
             except ValueError:
-                # Abaikan data jika pengguna mengakalinya dengan huruf
                 continue
             
+    # hitung total waktu dan estimasi nilai
     total_time_needed = 0
     total_value_expected = 0
     total_weight_expected = 0
@@ -52,6 +51,7 @@ def process():
         total_value_expected += (m['value_per_kg'] * m['max_qty'])
         total_weight_expected += m['max_qty']
         
+    # panggil fungsi optimasi kalau waktu pengerjaan lebih dari kapasitas mesin
     scheduler = Scheduler()
     result_dp = None
     result_rr = None

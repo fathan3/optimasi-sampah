@@ -1,5 +1,6 @@
 class Scheduler:
     def calculate_dp(self, materials, max_time):
+        # setup variabel buat DP
         dp = [0] * (max_time + 1)
         item_count = [{} for _ in range(max_time + 1)]
         
@@ -7,6 +8,7 @@ class Scheduler:
             for count_arr in item_count:
                 count_arr[m['name']] = 0
 
+        # proses cari kombinasi terbaik pake Dynamic Programming
         for w in range(max_time + 1):
             for material in materials:
                 time = material['time_per_kg']
@@ -25,6 +27,7 @@ class Scheduler:
                             item_count[w] = dict(item_count[prev_w])
                             item_count[w][name] = item_count[prev_w].get(name, 0) + 1
 
+        # cari profit tertingginya
         max_val = 0
         best_w = 0
         for w in range(max_time + 1):
@@ -32,6 +35,7 @@ class Scheduler:
                 max_val = dp[w]
                 best_w = w
 
+        # rekap dan format hasil akhir DP
         total_weight = 0
         details = []
         for name, qty in item_count[best_w].items():
@@ -48,6 +52,7 @@ class Scheduler:
         }
 
     def calculate_round_robin(self, materials, max_time):
+        # setup variabel buat Round Robin
         time_used = 0
         total_value = 0
         total_weight = 0
@@ -58,6 +63,7 @@ class Scheduler:
 
         done = False
 
+        # bagi rata jatah waktu ke masing-masing material
         while not done:
             processed_in_cycle = 0
 
@@ -78,6 +84,7 @@ class Scheduler:
             if processed_in_cycle == 0:
                 done = True
 
+        # rekap dan format hasil akhir Round Robin
         details = []
         for name, qty in processed.items():
             if qty > 0:
